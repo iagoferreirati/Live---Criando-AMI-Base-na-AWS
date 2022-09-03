@@ -1,0 +1,37 @@
+- name: Atualizar o cache
+  apt: update_cache=yes #apt update
+
+- name: Atualizar o sistema operacional
+  apt: 
+    name: "*" 
+    state: latest
+
+- name: Instalar pacotes essenciais #apt install vim curl telnet ...
+  apt:
+    name:
+      - vim
+      - curl
+      - telnet
+      - unzip
+      - wget
+      - net-tools
+      - htop
+      - nmap
+      - nginx
+
+- name: Adicionar usuario carryon.tech #useradd carryon.tech
+  user:
+    name: carryon.tech
+    shell: /bin/bash
+    home: /home/carryon.tech
+
+- name: Adicionar usuario carryon.tech no Sudoers #sed "carryon.tech    ALL=(ALL:ALL) NOPASSWD: ALL" 
+  lineinfile:
+    dest: /etc/sudoers
+    line: "carryon.tech    ALL=(ALL:ALL) NOPASSWD: ALL"
+
+- name: Configurando authorized key usuario carryon.tech
+  authorized_key:
+    user: carryon.tech
+    state: present
+    key: "{{ lookup('file', 'files/id_rsa.pub') }}"   
